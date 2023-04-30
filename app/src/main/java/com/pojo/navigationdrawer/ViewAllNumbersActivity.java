@@ -1,21 +1,17 @@
-package com.pojo.navigationdrawer.ui.home;
+package com.pojo.navigationdrawer;
 
-import android.app.Dialog;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.pojo.navigationdrawer.ViewAllNumbersActivity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
 import com.pojo.navigationdrawer.adapter.ViewAllNumberAdapter;
-import com.pojo.navigationdrawer.databinding.FragmentHomeBinding;
+import com.pojo.navigationdrawer.databinding.ActivityLoginBinding;
+import com.pojo.navigationdrawer.databinding.ActivityViewAllNumbersBinding;
 import com.pojo.navigationdrawer.model.CalledStatusResponse;
 import com.pojo.navigationdrawer.model.CustomerBasetResponse;
 import com.pojo.navigationdrawer.utils.AppConstant;
@@ -33,40 +29,34 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends Fragment implements ViewAllNumberAdapter.OnNumberClickable {
+public class ViewAllNumbersActivity extends AppCompatActivity implements ViewAllNumberAdapter.OnNumberClickable {
 
-    private FragmentHomeBinding binding;
+    ActivityViewAllNumbersBinding binding;
 
     ViewAllNumberAdapter viewAllNumberAdapter;
 
     SqliteManager sqliteManager;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_view_all_numbers);
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        binding = ActivityViewAllNumbersBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
-        //final TextView textView = binding.textHome;
-        //homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        sqliteManager=new SqliteManager(ViewAllNumbersActivity.this);
 
-        sqliteManager=new SqliteManager(getContext());
-
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(ViewAllNumbersActivity.this, LinearLayoutManager.VERTICAL, false);
         binding.rvViewAllNumber.setLayoutManager(mLayoutManager);
 
         getCustomerBase();
 
-
-
-        return root;
     }
 
     private void getCustomerBase() {
-
-        Dialog dialogs = ProgressDlg.showProgressBar(getContext());
+        Dialog dialogs = ProgressDlg.showProgressBar(ViewAllNumbersActivity.this);
 
         System.out.println("GetCustomerBase");
 
@@ -76,7 +66,7 @@ public class HomeFragment extends Fragment implements ViewAllNumberAdapter.OnNum
         System.out.print("Currentdate " + strDate);
 
         ApiInterface apiService = ApiClient.getAPIClient().create(ApiInterface.class);
-        Call<CustomerBasetResponse> call = apiService.doGetCustomerBase(SessionHandler.getValueInt(getContext(), AppConstant.USER_ID), strDate);
+        Call<CustomerBasetResponse> call = apiService.doGetCustomerBase(SessionHandler.getValueInt(ViewAllNumbersActivity.this, AppConstant.USER_ID), strDate);
         call.enqueue(new Callback<CustomerBasetResponse>() {
             @Override
             public void onResponse(Call<CustomerBasetResponse> call, Response<CustomerBasetResponse> response) {
@@ -91,17 +81,17 @@ public class HomeFragment extends Fragment implements ViewAllNumberAdapter.OnNum
                     String dateAndTime = customerBasetResponse.getResponseDate().get(0).getDateAndTime();
                     String[] words = dateAndTime.split(" ");//splits the string based on whitespace
                     System.out.println("SAvedDAte " + words[0]);
-                    SessionHandler.setValueString(getContext(), AppConstant.RECORD_DATE, words[0]);
+                    SessionHandler.setValueString(ViewAllNumbersActivity.this, AppConstant.RECORD_DATE, words[0]);
 
 
 
                 } else {
-                    Toast.makeText(getContext(),"No base found this day",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewAllNumbersActivity.this,"No base found this day",Toast.LENGTH_SHORT).show();
                     getAllDataFromSqliteDb();
 
                 }
 
-                ProgressDlg.dismisProgressBar(getContext(), dialogs);
+                ProgressDlg.dismisProgressBar(ViewAllNumbersActivity.this, dialogs);
             }
 
             @Override
@@ -109,7 +99,7 @@ public class HomeFragment extends Fragment implements ViewAllNumberAdapter.OnNum
 
                 System.out.println("TTTT "+t.getMessage().toString() );
 
-                ProgressDlg.dismisProgressBar(getContext(), dialogs);
+                ProgressDlg.dismisProgressBar(ViewAllNumbersActivity.this, dialogs);
             }
         });
 
@@ -127,19 +117,21 @@ public class HomeFragment extends Fragment implements ViewAllNumberAdapter.OnNum
     private void getAllDataFromSqliteDb(){
         List<CalledStatusResponse> calledStatusResponseList =sqliteManager.getAllUserData();
 
-        viewAllNumberAdapter=new ViewAllNumberAdapter(getContext(),calledStatusResponseList,this);
+        viewAllNumberAdapter=new ViewAllNumberAdapter(ViewAllNumbersActivity.this,calledStatusResponseList,this);
         binding.rvViewAllNumber.setAdapter(viewAllNumberAdapter);
 
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    @Override
     public void onNumberClick(CalledStatusResponse calledStatusResponse) {
+
+
+       /* Intent intent=new Intent(ViewAllNumbersActivity.this,HomeActivity.class);
+        intent.putExtra("Name",calledStatusResponse.getName());
+        intent.putExtra("Number",calledStatusResponse.getMobileNumber());
+        intent.putExtra("CustomerId",calledStatusResponse.getId());
+        startActivity(intent);*/
+
 
     }
 }

@@ -1,6 +1,7 @@
 package com.pojo.navigationdrawer.webservice;
 
 import com.pojo.navigationdrawer.model.BaseResponse;
+import com.pojo.navigationdrawer.model.CustomerBasetResponse;
 import com.pojo.navigationdrawer.model.LoginRequest;
 import com.pojo.navigationdrawer.model.LoginResponse;
 
@@ -49,8 +50,8 @@ public interface ApiInterface {
 
                                              );
 
-    /*@GET("api/record/")
-    Call<CustomerBasetResponse> doGetCustomerBase(@Query("employee_id") int userId,@Query("date") String date);*/
+    @GET("api/record/")
+    Call<CustomerBasetResponse> doGetCustomerBase(@Query("employee_id") int userId, @Query("date") String date);
 
 
 }
