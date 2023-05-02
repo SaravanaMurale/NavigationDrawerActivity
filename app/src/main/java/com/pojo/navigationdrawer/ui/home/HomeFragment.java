@@ -133,13 +133,35 @@ public class HomeFragment extends Fragment implements ViewAllNumberAdapter.OnNum
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onResume() {
+        super.onResume();
+
+        int refreshStatus=SessionHandler.getValueInt(getContext(),AppConstant.REFRESH_STATUS);
+
+        if(refreshStatus==1) {
+
+            //viewAllNumberAdapter.notifyDataSetChanged();
+
+            getAllDataFromSqliteDb();
+
+            SessionHandler.setValueSInt(getContext(),AppConstant.REFRESH_STATUS,0);
+
+        }
+
     }
 
     @Override
     public void onNumberClick(CalledStatusResponse calledStatusResponse) {
 
+
+
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+
 }

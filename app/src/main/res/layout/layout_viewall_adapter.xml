@@ -42,15 +42,24 @@
                     android:textColor="@color/black"
                     />
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/custCallNumber"
+                    >
+
                 <ImageView
                     android:id="@+id/callStatusIcon"
                     android:layout_width="25dp"
                     android:layout_height="20dp"
                     android:src="@drawable/rounded_green"
-                    android:layout_below="@+id/custCallNumber"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginLeft="30dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
+                    android:layout_marginRight="10dp"
                     />
+
+                </RelativeLayout>
 
 
 

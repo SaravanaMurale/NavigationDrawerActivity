@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pojo.navigationdrawer.R;
 import com.pojo.navigationdrawer.model.CalledStatusResponse;
+import com.pojo.navigationdrawer.utils.AppConstant;
+import com.pojo.navigationdrawer.utils.SessionHandler;
+import com.pojo.navigationdrawer.utils.SqliteManager;
 
 import java.util.List;
 
@@ -76,7 +79,7 @@ public class ViewAllNumberAdapter extends RecyclerView.Adapter<ViewAllNumberAdap
             public void onClick(View view) {
 
                 try {
-                    String text = "Dear Customer, you are Eligible for Preapproved credit card up to 5 Lakhs. No Annual Fees and Joining Fees – Lifetime free Credit Card with Special Offers.5% Cashback on Amazon, BookMyShow, Cult.fit, Flipkart, Myntra, Sony LIV, Swiggy, Tata CLiQ, Uber and Zomato.1% cashback on all other spends (except Fuel) including EMI and Wallet transactions.₹1000 worth gift vouchers on spends of ₹1,00,000 and above in each calendar quarter";
+                    String text = "Dear Customer, Do you want to promote your business through Digital Marketing or Website or Mobile. Please call us. www.pojotechnology.com";
 
                     String toNumber = calledStatusResponseList.get(holder.getAdapterPosition()).getMobileNumber();
                     if (!toNumber.equals("") && toNumber != null) {
@@ -96,6 +99,11 @@ public class ViewAllNumberAdapter extends RecyclerView.Adapter<ViewAllNumberAdap
         holder.callIconDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+                SessionHandler.setValueSInt(context, AppConstant.REFRESH_STATUS,1);
+                new SqliteManager(context).updateCalledStatus(calledStatusResponseList.get(holder.getAdapterPosition()).getId());
+
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + calledStatusResponseList.get(holder.getAdapterPosition()).getMobileNumber()));
                 context.startActivity(intent);
