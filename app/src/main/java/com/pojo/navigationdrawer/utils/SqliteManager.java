@@ -111,13 +111,13 @@ public class SqliteManager extends SQLiteOpenHelper {
         List<CalledStatusResponse> calledStatusResponseList=new ArrayList<>();
 
         SQLiteDatabase selectAllData = getReadableDatabase();
-        Cursor cursor = selectAllData.rawQuery("select id,name,mobile_number,called_status from cutomerbasetable where status=?", new String[]{"Pending"});
+        Cursor cursor = selectAllData.rawQuery("select id,name,mobile_number,called_status,date from cutomerbasetable where status=?", new String[]{"Pending"});
 
         if (cursor.moveToFirst()) {
 
             do {
 
-                CalledStatusResponse calledStatusResponse=new CalledStatusResponse(cursor.getInt(0), cursor.getString(1), cursor.getString(2),cursor.getString(3));
+                CalledStatusResponse calledStatusResponse=new CalledStatusResponse(cursor.getInt(0), cursor.getString(1), cursor.getString(2),cursor.getString(3),cursor.getString(4));
                 calledStatusResponseList.add(calledStatusResponse);
 
             }
@@ -132,7 +132,10 @@ public class SqliteManager extends SQLiteOpenHelper {
     public void deleteAllValeuesInTable() {
 
         SQLiteDatabase deleteSqLiteDatabase = this.getWritableDatabase();
-        deleteSqLiteDatabase.execSQL("DELETE FROM cutomerbasetable"); //delete all rows in a table
+
+        deleteSqLiteDatabase.delete(TABLE_NAME, CALLED_STATUS + "=?", new String[]{"true"});
+
+        //deleteSqLiteDatabase.execSQL("DELETE FROM cutomerbasetable",); //delete all rows in a table
 
     }
 

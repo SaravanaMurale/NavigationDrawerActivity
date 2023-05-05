@@ -56,9 +56,10 @@ public class ViewAllNumberAdapter extends RecyclerView.Adapter<ViewAllNumberAdap
 
 
         if(calledStatusResponseList.get(holder.getAdapterPosition()).isCalledStatus().equalsIgnoreCase("false")){
+            //Not called yet
             holder.callStatusIcon.setVisibility(View.VISIBLE);
         }else {
-
+            //Already called
             holder.callStatusIcon.setVisibility(View.GONE);
 
         }
@@ -66,6 +67,7 @@ public class ViewAllNumberAdapter extends RecyclerView.Adapter<ViewAllNumberAdap
 
         holder.name.setText(calledStatusResponseList.get(holder.getAdapterPosition()).getName());
         holder.number.setText(calledStatusResponseList.get(holder.getAdapterPosition()).getMobileNumber());
+        holder.date.setText(calledStatusResponseList.get(holder.getAdapterPosition()).getDate());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +121,7 @@ public class ViewAllNumberAdapter extends RecyclerView.Adapter<ViewAllNumberAdap
 
     public class ViewAllViewHolder extends RecyclerView.ViewHolder{
 
-        TextView name,number;
+        TextView name,number,date;
         LinearLayout headerBlock;
         ImageView callStatusIcon,whatsAppDetails,callIconDetail;
 
@@ -128,6 +130,7 @@ public class ViewAllNumberAdapter extends RecyclerView.Adapter<ViewAllNumberAdap
 
             name=(TextView) itemView.findViewById(R.id.userNameDetail);
             number=(TextView) itemView.findViewById(R.id.customerMobileNumberDetails);
+            date=(TextView)itemView.findViewById(R.id.userDate);
 
             headerBlock=(LinearLayout) itemView.findViewById(R.id.headerBlock);
 
